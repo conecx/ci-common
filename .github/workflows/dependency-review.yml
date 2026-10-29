@@ -1,0 +1,29 @@
+name: dependency-review
+
+on:
+  workflow_call:
+    inputs:
+      failOnSeverity:
+        description: 'Defines the threshold for the level of severity. Values low, moderate, high, critical.'
+        default: 'low'
+        required: false
+        type: string
+      warnOnly:
+        description: 'When set to true, the action will log all vulnerabilities as warnings regardless of the severity, and the action will complete with a success status. This overrides the fail-on-severity option.'
+        default: false
+        required: false
+        type: boolean
+        
+jobs:
+  dependency-review:
+    name: dependency review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read    
+    steps:
+      - uses: actions/checkout@v6
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v5
+        with:
+          fail-on-severity: ${{ inputs.failOnSeverity }}
+          warn-only: ${{ inputs.warnOnly }}
